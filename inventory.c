@@ -4,7 +4,8 @@
 struct inv_item_t create_weapon(const char *name, int dmg, int dur) {
     struct inv_item_t item;
     item.type = ITEM_WEAPON;
-    strcpy(item.name, name);
+    strncpy(item.name, name, ITEM_NAME_MAXLEN);
+    item.name[ITEM_NAME_MAXLEN] = '\0';
     item.data.as_weapon.damage = dmg;
     item.data.as_weapon.durability = dur;
     return item;
@@ -24,6 +25,7 @@ struct inv_item_t create_armor(const char *name, int ac, int dur) {
     // strncpy() i stedet for strcpy(), fordi den stopper ved for lange navne.
     // strcpy(item.name, name);
     strncpy(item.name, name, ITEM_NAME_MAXLEN);
+    item.name[ITEM_NAME_MAXLEN] = '\0';
     item.data.as_armor.protection = ac;
     item.data.as_armor.durability = dur;
 
@@ -42,4 +44,12 @@ struct inv_item_t create_life_potion(int amount, int uses_left) {
     item.data.as_consumable.uses_left = uses_left;
 
     return item;
+}
+
+struct armor_t *get_armor_stats(struct inv_item_t *item) {
+    if (item->type != ITEM_ARMOR) {
+        return NULL;
+    }
+    int a = 2 + 3 * 5; // præcedens / precedence
+    return &item->data.as_armor;
 }
